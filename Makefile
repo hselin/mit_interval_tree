@@ -3,12 +3,13 @@ CC	=	g++
 # use the following cflags for old versions of g++ with sets.old.H
 #OLD_CFLAGS	=	-g -Wall -pedantic -fguiding-decls
 # use the following for new versions of g++/egcs with sets.H
-CFLAGS	=	-g -pedantic
+CFLAGS	=	-g -pedantic -std=c++11
 LINK	=	g++
 #LFLAGS	=	${CFLAGS} -ldl -ltcl -lefence
 #OBJECTS = interval_tree.o test.o RedBlackTree.o
 LFLAGS	=	${CFLAGS}
-OBJECTS = interval_tree.o test.o
+#OBJECTS = interval_tree.o test.o
+OBJECTS = test.o
 
 .PHONY: test clean 
 
