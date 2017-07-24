@@ -7,6 +7,7 @@
 #include <math.h>
 #include <limits.h>
 #include <iostream>
+#include <cstdint>
 #include <stack>
 #include <queue>
 
@@ -49,8 +50,8 @@ class Interval {
 public:
   Interval();
   virtual ~Interval();
-  virtual int GetLowPoint() const = 0;
-  virtual int GetHighPoint() const = 0;
+  virtual uint64_t GetLowPoint() const = 0;
+  virtual uint64_t GetHighPoint() const = 0;
   virtual void Print() const;
 };
 
@@ -64,9 +65,9 @@ public:
   ~IntervalTreeNode();
 protected:
   Interval * storedInterval;
-  int key;
-  int high;
-  int maxHigh;
+  uint64_t key;
+  uint64_t high;
+  uint64_t maxHigh;
   int red; /* if red=0 then the node is black */
   IntervalTreeNode * left;
   IntervalTreeNode * right;
@@ -95,7 +96,7 @@ public:
   IntervalTreeNode * GetPredecessorOf(IntervalTreeNode *) const;
   IntervalTreeNode * GetSuccessorOf(IntervalTreeNode *) const;
   //TemplateStack<void *> * Enumerate(int low, int high) ;
-  std::queue<void *> * Enumerate(int low, int high);
+  std::queue<void *> * Enumerate(uint64_t low, uint64_t high);
   void CheckAssumptions() const;
 protected:
   /*  A sentinel is used for root and for nil.  These sentinels are */
@@ -114,7 +115,7 @@ protected:
   void DeleteFixUp(IntervalTreeNode *);
   void CheckMaxHighFields(IntervalTreeNode *) const;
   int CheckMaxHighFieldsHelper(IntervalTreeNode * y, 
-			const int currentHigh,
+			const uint64_t currentHigh,
 			int match) const;
 private:
   unsigned int recursionNodeStackSize;

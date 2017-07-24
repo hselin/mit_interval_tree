@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <limits>
 
 // If the symbol CHECK_INTERVAL_TREE_ASSUMPTIONS is defined then the
 // code does a lot of extra checking to make sure certain assumptions
@@ -16,7 +17,12 @@
 
 #define VERIFY(x) assert(x)
 
-const int MIN_INT=-MAX_INT;
+
+const uint64_t MIN_VAL = 0;
+const uint64_t MAX_VAL = ULLONG_MAX;
+
+
+//const int MIN_INT=-MAX_INT;
 
 // define a function to find the maximum of two objects.
 #define ITMax(a, b) ( (a > b) ? a : b )
@@ -67,12 +73,12 @@ IntervalTree::IntervalTree()
   nil = new IntervalTreeNode;
   nil->left = nil->right = nil->parent = nil;
   nil->red = 0;
-  nil->key = nil->high = nil->maxHigh = MIN_INT;
+  nil->key = nil->high = nil->maxHigh = MIN_VAL;
   nil->storedInterval = NULL;
   
   root = new IntervalTreeNode;
   root->parent = root->left = root->right = nil;
-  root->key = root->high = root->maxHigh = MAX_INT;
+  root->key = root->high = root->maxHigh = MAX_VAL;
   root->red=0;
   root->storedInterval = NULL;
 
@@ -142,8 +148,8 @@ void IntervalTree::LeftRotate(IntervalTreeNode* x) {
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
   Assert(!nil->red,"nil not red in ITLeftRotate");
-  Assert((nil->maxHigh=MIN_INT),
-	 "nil->maxHigh != MIN_INT in ITLeftRotate");
+  Assert((nil->maxHigh=MIN_VAL),
+	 "nil->maxHigh != MIN_VAL in ITLeftRotate");
 #endif
 }
 
@@ -202,8 +208,8 @@ void IntervalTree::RightRotate(IntervalTreeNode* y) {
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
   Assert(!nil->red,"nil not red in ITRightRotate");
-  Assert((nil->maxHigh=MIN_INT),
-	 "nil->maxHigh != MIN_INT in ITRightRotate");
+  Assert((nil->maxHigh=MIN_VAL),
+	 "nil->maxHigh != MIN_VAL in ITRightRotate");
 #endif
 }
 
@@ -249,8 +255,8 @@ void IntervalTree::TreeInsertHelp(IntervalTreeNode* z) {
 
 #if defined(DEBUG_ASSERT)
   Assert(!nil->red,"nil not red in ITTreeInsertHelp");
-  Assert((nil->maxHigh=MIN_INT),
-	 "nil->maxHigh != MIN_INT in ITTreeInsertHelp");
+  Assert((nil->maxHigh=MIN_VAL),
+	 "nil->maxHigh != MIN_VAL in ITTreeInsertHelp");
 #endif
 }
 
@@ -353,8 +359,8 @@ IntervalTreeNode * IntervalTree::Insert(Interval * newInterval)
 #elif defined(DEBUG_ASSERT)
   Assert(!nil->red,"nil not red in ITTreeInsert");
   Assert(!root->red,"root not red in ITTreeInsert");
-  Assert((nil->maxHigh=MIN_INT),
-	 "nil->maxHigh != MIN_INT in ITTreeInsert");
+  Assert((nil->maxHigh=MIN_VAL),
+	 "nil->maxHigh != MIN_VAL in ITTreeInsert");
 #endif
 }
 
@@ -441,13 +447,13 @@ IntervalTreeNode * IntervalTree::GetPredecessorOf(IntervalTreeNode * x) const {
 void IntervalTreeNode::Print(IntervalTreeNode * nil,
 			     IntervalTreeNode * root) const {
   storedInterval->Print();
-  printf(", k=%i, h=%i, mH=%i",key,high,maxHigh);
+  printf(", k=%lu, h=%lu, mH=%lu",key,high,maxHigh);
   printf("  l->key=");
-  if( left == nil) printf("NULL"); else printf("%i",left->key);
+  if( left == nil) printf("NULL"); else printf("%lu",left->key);
   printf("  r->key=");
-  if( right == nil) printf("NULL"); else printf("%i",right->key);
+  if( right == nil) printf("NULL"); else printf("%lu",right->key);
   printf("  p->key=");
-  if( parent == root) printf("NULL"); else printf("%i",parent->key);
+  if( parent == root) printf("NULL"); else printf("%lu",parent->key);
   printf("  red=%i\n",red);
 }
 
@@ -587,8 +593,8 @@ void IntervalTree::DeleteFixUp(IntervalTreeNode* x) {
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
   Assert(!nil->red,"nil not black in ITDeleteFixUp");
-  Assert((nil->maxHigh=MIN_INT),
-	 "nil->maxHigh != MIN_INT in ITDeleteFixUp");
+  Assert((nil->maxHigh=MIN_VAL),
+	 "nil->maxHigh != MIN_VAL in ITDeleteFixUp");
 #endif
 }
 
@@ -632,7 +638,7 @@ Interval * IntervalTree::DeleteNode(IntervalTreeNode * z){
 #endif
     /* y is the node to splice out and x is its child */
   
-    y->maxHigh = MIN_INT;
+    y->maxHigh = MIN_VAL;
     y->left=z->left;
     y->right=z->right;
     y->parent=z->parent;
@@ -653,7 +659,7 @@ Interval * IntervalTree::DeleteNode(IntervalTreeNode * z){
     CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
     Assert(!nil->red,"nil not black in ITDelete");
-    Assert((nil->maxHigh=MIN_INT),"nil->maxHigh != MIN_INT in ITDelete");
+    Assert((nil->maxHigh=MIN_VAL),"nil->maxHigh != MIN_VAL in ITDelete");
 #endif
   } else {
     FixUpMaxHigh(x->parent);
@@ -663,7 +669,7 @@ Interval * IntervalTree::DeleteNode(IntervalTreeNode * z){
     CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
     Assert(!nil->red,"nil not black in ITDelete");
-    Assert((nil->maxHigh=MIN_INT),"nil->maxHigh != MIN_INT in ITDelete");
+    Assert((nil->maxHigh=MIN_VAL),"nil->maxHigh != MIN_VAL in ITDelete");
 #endif
   }
   return returnValue;
@@ -683,7 +689,7 @@ Interval * IntervalTree::DeleteNode(IntervalTreeNode * z){
 /*    EFFECT:  returns 1 if the intervals overlap, and 0 otherwise */
 /***********************************************************************/
 
-int Overlap(int a1, int a2, int b1, int b2) {
+int Overlap(uint64_t a1, uint64_t a2, uint64_t b1, uint64_t b2) {
   if (a1 <= b1) {
     return( (b1 <= a2) );
   } else {
@@ -730,8 +736,8 @@ int Overlap(int a1, int a2, int b1, int b2) {
 /*  of the left child of root we must recursively check the right subtree */
 /*  of the left child of root as well as the right child of root. */
 
-std::queue<void *> * IntervalTree::Enumerate(int low, 
-							int high)  {
+std::queue<void *> * IntervalTree::Enumerate(uint64_t low, 
+							uint64_t high)  {
   std::queue<void *> * enumResultStack;
   IntervalTreeNode* x=root->left;
   int stuffToDo = (x != nil);
@@ -787,7 +793,7 @@ std::queue<void *> * IntervalTree::Enumerate(int low,
 
 
 int IntervalTree::CheckMaxHighFieldsHelper(IntervalTreeNode * y, 
-				    const int currentHigh,
+				    const uint64_t currentHigh,
 				    int match) const
 {
   if (y != nil) {
@@ -817,12 +823,12 @@ void IntervalTree::CheckMaxHighFields(IntervalTreeNode * x) const {
 }
 
 void IntervalTree::CheckAssumptions() const {
- VERIFY(nil->key == MIN_INT);
- VERIFY(nil->high == MIN_INT);
- VERIFY(nil->maxHigh == MIN_INT);
- VERIFY(root->key == MAX_INT);
- VERIFY(root->high == MAX_INT);
- VERIFY(root->maxHigh == MAX_INT);
+ VERIFY(nil->key == MIN_VAL);
+ VERIFY(nil->high == MIN_VAL);
+ VERIFY(nil->maxHigh == MIN_VAL);
+ VERIFY(root->key == MAX_VAL);
+ VERIFY(root->high == MAX_VAL);
+ VERIFY(root->maxHigh == MAX_VAL);
  VERIFY(nil->storedInterval == NULL);
  VERIFY(root->storedInterval == NULL);
  VERIFY(nil->red == 0);
