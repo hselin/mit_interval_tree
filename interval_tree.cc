@@ -785,6 +785,7 @@ int IntervalTree::Enumerate(uint64_t low, uint64_t high, std::queue<void *> *res
 #ifdef DEBUG_ASSERT
   Assert((recursionNodeStackTop == 1),
 	 "recursionStack not empty when exiting IntervalTree::Enumerate");
+  Assert(count == result->size())
 #endif
   return count;
 }
