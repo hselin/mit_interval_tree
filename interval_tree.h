@@ -96,7 +96,8 @@ public:
   IntervalTreeNode * GetPredecessorOf(IntervalTreeNode *) const;
   IntervalTreeNode * GetSuccessorOf(IntervalTreeNode *) const;
   //TemplateStack<void *> * Enumerate(int low, int high) ;
-  std::queue<void *> * Enumerate(uint64_t low, uint64_t high);
+  //std::queue<void *> * Enumerate(uint64_t low, uint64_t high);
+  int Enumerate(uint64_t low, uint64_t high, std::queue<void *> *result);
   void CheckAssumptions() const;
 protected:
   /*  A sentinel is used for root and for nil.  These sentinels are */

@@ -1,5 +1,6 @@
 #include "interval_tree.h"
 #include <stdio.h>
+#include <assert.h>
 
 
 class SimpleInterval : public Interval {
@@ -27,9 +28,9 @@ Interval *addInterval(IntervalTree *tree, uint64_t low, uint64_t high)
   return newSimpleInterval;
 }
 
-std::queue<void *> *queryInterval(IntervalTree *tree, uint64_t low, uint64_t high)
+int queryInterval(IntervalTree *tree, uint64_t low, uint64_t high, std::queue<void *> *qr)
 {
-  return tree->Enumerate(low, high);
+  return tree->Enumerate(low, high, qr);
 }
 
 void printIntervals(std::queue<Interval *> *intervals)
@@ -45,11 +46,17 @@ void printIntervals(std::queue<Interval *> *intervals)
 
 void deleteInterval(IntervalTree *tree, uint64_t low, uint64_t high)
 {
-  std::queue<Interval *> *qr = (std::queue<Interval *> *)queryInterval(tree, low, high);
+  std::queue<Interval *> qr;
+  int count = queryInterval(tree, low, high, (std::queue<void *> *)&qr);
 
-  while(!qr->empty())
+  //printf("count: %d\n", count);
+  //printf("qr.size(): %lu\n", qr.size());
+
+  assert(count == qr.size());
+
+  while(!qr.empty())
   {
-    SimpleInterval *i = (SimpleInterval *)qr->front();
+    SimpleInterval *i = (SimpleInterval *)qr.front();
 
     if((i->GetLowPoint() == low) && (i->GetHighPoint() == high))
     {
@@ -57,7 +64,7 @@ void deleteInterval(IntervalTree *tree, uint64_t low, uint64_t high)
       tree->DeleteNode(i->GetNode());
     }
 
-    qr->pop();
+    qr.pop();
   }
 }
 
@@ -71,10 +78,12 @@ int main(int argc, char ** argv)
   addInterval(tree, 100, 100);
   addInterval(tree, 100, 100);
 
-  deleteInterval(tree, 0, 0);
+  deleteInterval(tree, 100, 101);
 
-  std::queue<Interval *> *qr = (std::queue<Interval *> *) queryInterval(tree, 0, 0);
-  printIntervals(qr);
+  std::queue<Interval *> qr;
+  int count = queryInterval(tree, 100, 100, (std::queue<void *> *)&qr);
+  assert(count == qr.size());
+  printIntervals(&qr);
 
   tree->Print();
 

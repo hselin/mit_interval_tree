@@ -736,11 +736,10 @@ int Overlap(uint64_t a1, uint64_t a2, uint64_t b1, uint64_t b2) {
 /*  of the left child of root we must recursively check the right subtree */
 /*  of the left child of root as well as the right child of root. */
 
-std::queue<void *> * IntervalTree::Enumerate(uint64_t low, 
-							uint64_t high)  {
-  std::queue<void *> * enumResultStack;
+int IntervalTree::Enumerate(uint64_t low, uint64_t high, std::queue<void *> *result)  {
   IntervalTreeNode* x=root->left;
   int stuffToDo = (x != nil);
+  int count = 0;
   
   // Possible speed up: add min field to prune right searches //
 
@@ -749,11 +748,11 @@ std::queue<void *> * IntervalTree::Enumerate(uint64_t low,
 	 "recursionStack not empty when entering IntervalTree::Enumerate");
 #endif
   currentParent = 0;
-  enumResultStack = new std::queue<void *>;
 
   while(stuffToDo) {
     if (Overlap(low,high,x->key,x->high) ) {
-      enumResultStack->push(x->storedInterval);
+      result->push(x->storedInterval);
+      count++;
       recursionNodeStack[currentParent].tryRightBranch=1;
     }
     if(x->left->maxHigh >= low) { // implies x != nil 
@@ -787,7 +786,7 @@ std::queue<void *> * IntervalTree::Enumerate(uint64_t low,
   Assert((recursionNodeStackTop == 1),
 	 "recursionStack not empty when exiting IntervalTree::Enumerate");
 #endif
-  return(enumResultStack);   
+  return count;
 }
 	
 
