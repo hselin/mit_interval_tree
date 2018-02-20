@@ -73,6 +73,20 @@ int main(int argc, char ** argv)
 {
   IntervalTree *tree = new IntervalTree();
 
+  SimpleInterval *i = (SimpleInterval *)addInterval(tree, 0, 9);
+  printf("i: %p %lu %lu\n", (void *)i, i->GetLowPoint(), i->GetHighPoint());
+  Interval *deletedInterval = tree->DeleteNode(i->GetNode());
+  printf("deletedInterval: %p %lu %lu\n", (void *)deletedInterval, deletedInterval->GetLowPoint(), deletedInterval->GetHighPoint());
+
+  //delete twice will be bad
+  //deletedInterval = tree->DeleteNode(i->GetNode());
+  //printf("deletedInterval: %p %lu %lu\n", (void *)deletedInterval, deletedInterval->GetLowPoint(), deletedInterval->GetHighPoint());
+
+
+  return 0;
+
+
+
   addInterval(tree, 99, 100);
   addInterval(tree, 100, 101);
   addInterval(tree, 100, 100);
