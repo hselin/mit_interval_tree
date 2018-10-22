@@ -18,8 +18,8 @@
 #define VERIFY(x) assert(x)
 
 
-const uint64_t MIN_VAL = 0;
-const uint64_t MAX_VAL = ULLONG_MAX;
+const int64_t MIN_VAL = INT64_MIN;
+const int64_t MAX_VAL = INT64_MAX;
 
 
 //const int MIN_INT=-MAX_INT;
@@ -447,13 +447,13 @@ IntervalTreeNode * IntervalTree::GetPredecessorOf(IntervalTreeNode * x) const {
 void IntervalTreeNode::Print(IntervalTreeNode * nil,
 			     IntervalTreeNode * root) const {
   storedInterval->Print();
-  printf(", k=%lu, h=%lu, mH=%lu",key,high,maxHigh);
+  printf(", k=%ld, h=%ld, mH=%ld",key,high,maxHigh);
   printf("  l->key=");
-  if( left == nil) printf("NULL"); else printf("%lu",left->key);
+  if( left == nil) printf("NULL"); else printf("%ld",left->key);
   printf("  r->key=");
-  if( right == nil) printf("NULL"); else printf("%lu",right->key);
+  if( right == nil) printf("NULL"); else printf("%ld",right->key);
   printf("  p->key=");
-  if( parent == root) printf("NULL"); else printf("%lu",parent->key);
+  if( parent == root) printf("NULL"); else printf("%ld",parent->key);
   printf("  red=%i\n",red);
 }
 
@@ -689,7 +689,7 @@ Interval * IntervalTree::DeleteNode(IntervalTreeNode * z){
 /*    EFFECT:  returns 1 if the intervals overlap, and 0 otherwise */
 /***********************************************************************/
 
-int Overlap(uint64_t a1, uint64_t a2, uint64_t b1, uint64_t b2) {
+int Overlap(int64_t a1, int64_t a2, int64_t b1, int64_t b2) {
   if (a1 <= b1) {
     return( (b1 <= a2) );
   } else {
@@ -736,7 +736,7 @@ int Overlap(uint64_t a1, uint64_t a2, uint64_t b1, uint64_t b2) {
 /*  of the left child of root we must recursively check the right subtree */
 /*  of the left child of root as well as the right child of root. */
 
-int IntervalTree::Enumerate(uint64_t low, uint64_t high, std::queue<void *> *result)  {
+int IntervalTree::Enumerate(int64_t low, int64_t high, std::queue<void *> *result)  {
   IntervalTreeNode* x=root->left;
   int stuffToDo = (x != nil);
   int count = 0;
@@ -793,7 +793,7 @@ int IntervalTree::Enumerate(uint64_t low, uint64_t high, std::queue<void *> *res
 
 
 int IntervalTree::CheckMaxHighFieldsHelper(IntervalTreeNode * y, 
-				    const uint64_t currentHigh,
+				    const int64_t currentHigh,
 				    int match) const
 {
   if (y != nil) {

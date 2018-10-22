@@ -5,17 +5,17 @@
 
 class SimpleInterval : public Interval {
 public:
-  SimpleInterval(const uint64_t low,const uint64_t high)
+  SimpleInterval(const int64_t low,const int64_t high)
     :_low(low), _high(high)
     { }
   
-  uint64_t GetLowPoint() const { return _low;}
-  uint64_t GetHighPoint() const { return _high;}
+  int64_t GetLowPoint() const { return _low;}
+  int64_t GetHighPoint() const { return _high;}
   IntervalTreeNode * GetNode() { return _node;}
   void SetNode(IntervalTreeNode * node) {_node = node;}
 protected:
-  uint64_t _low;
-  uint64_t _high;
+  int64_t _low;
+  int64_t _high;
   IntervalTreeNode * _node;
 };
 
@@ -30,7 +30,7 @@ Interval *addInterval(IntervalTree *tree, uint64_t low, uint64_t high)
 
 int queryInterval(IntervalTree *tree, uint64_t low, uint64_t high, std::queue<void *> *qr)
 {
-  return tree->Enumerate(low, high, qr);
+  return tree->Enumerate((int64_t)low, (int64_t)high, qr);
 }
 
 void printIntervals(std::queue<Interval *> *intervals)
@@ -73,6 +73,7 @@ int main(int argc, char ** argv)
 {
   IntervalTree *tree = new IntervalTree();
 
+  /*
   SimpleInterval *i = (SimpleInterval *)addInterval(tree, 0, 9);
   printf("i: %p %lu %lu\n", (void *)i, i->GetLowPoint(), i->GetHighPoint());
   Interval *deletedInterval = tree->DeleteNode(i->GetNode());
@@ -84,18 +85,31 @@ int main(int argc, char ** argv)
 
 
   return 0;
+  */
 
 
-
+  /*
   addInterval(tree, 99, 100);
   addInterval(tree, 100, 101);
   addInterval(tree, 100, 100);
   addInterval(tree, 100, 100);
 
   deleteInterval(tree, 100, 101);
+  */
 
+  /*
+  printf("INT64_MIN: %ld\n", INT64_MIN);
+  printf("INT64_MAX: %ld\n", INT64_MAX);
+
+  printf("LLONG_MIN: %lld\n", LLONG_MIN);
+  printf("LLONG_MAX: %lld\n", LLONG_MAX);
+  */
+
+  addInterval(tree, 0, 4607);
+  addInterval(tree, 4608, 7047);
+  
   std::queue<Interval *> qr;
-  int count = queryInterval(tree, 100, 100, (std::queue<void *> *)&qr);
+  int count = queryInterval(tree, 0, 7047, (std::queue<void *> *)&qr);
   assert(count == qr.size());
   printIntervals(&qr);
 

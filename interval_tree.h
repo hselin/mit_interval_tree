@@ -32,11 +32,6 @@
 //                names beginning with "g".  An example of a global 
 //                variable name is gNewtonsConstant. 
 
-
-#ifndef MAX_INT
-#define MAX_INT INT_MAX // some architechturs define INT_MAX not MAX_INT
-#endif
-
 // The Interval class is an Abstract Base Class.  This means that no
 // instance of the Interval class can exist.  Only classes which
 // inherit from the Interval class can exist.  Furthermore any class
@@ -50,24 +45,23 @@ class Interval {
 public:
   Interval();
   virtual ~Interval();
-  virtual uint64_t GetLowPoint() const = 0;
-  virtual uint64_t GetHighPoint() const = 0;
+  virtual int64_t GetLowPoint() const = 0;
+  virtual int64_t GetHighPoint() const = 0;
   virtual void Print() const;
 };
 
 class IntervalTreeNode {
   friend class IntervalTree;
 public:
-  void Print(IntervalTreeNode*,
-	     IntervalTreeNode*) const;
+  void Print(IntervalTreeNode*, IntervalTreeNode*) const;
   IntervalTreeNode();
   IntervalTreeNode(Interval *);
   ~IntervalTreeNode();
 protected:
   Interval * storedInterval;
-  uint64_t key;
-  uint64_t high;
-  uint64_t maxHigh;
+  int64_t key;
+  int64_t high;
+  int64_t maxHigh;
   int red; /* if red=0 then the node is black */
   IntervalTreeNode * left;
   IntervalTreeNode * right;
@@ -97,7 +91,7 @@ public:
   IntervalTreeNode * GetSuccessorOf(IntervalTreeNode *) const;
   //TemplateStack<void *> * Enumerate(int low, int high) ;
   //std::queue<void *> * Enumerate(uint64_t low, uint64_t high);
-  int Enumerate(uint64_t low, uint64_t high, std::queue<void *> *result);
+  int Enumerate(int64_t low, int64_t high, std::queue<void *> *result);
   void CheckAssumptions() const;
 protected:
   /*  A sentinel is used for root and for nil.  These sentinels are */
@@ -115,9 +109,7 @@ protected:
   void FixUpMaxHigh(IntervalTreeNode *);
   void DeleteFixUp(IntervalTreeNode *);
   void CheckMaxHighFields(IntervalTreeNode *) const;
-  int CheckMaxHighFieldsHelper(IntervalTreeNode * y, 
-			const uint64_t currentHigh,
-			int match) const;
+  int CheckMaxHighFieldsHelper(IntervalTreeNode * y, const int64_t currentHigh, int match) const;
 private:
   unsigned int recursionNodeStackSize;
   it_recursion_node * recursionNodeStack;
