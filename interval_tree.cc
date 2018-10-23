@@ -81,17 +81,6 @@ IntervalTree::IntervalTree()
   root->key = root->high = root->maxHigh = MAX_VAL;
   root->red=0;
   root->storedInterval = NULL;
-
-  /* the following are used for the Enumerate function */
-  recursionNodeStackSize = 128;
-  recursionNodeStack = (it_recursion_node *) 
-    malloc(recursionNodeStackSize * sizeof(it_recursion_node));
-
-  assert(recursionNodeStack);
-
-  recursionNodeStackTop = 1;
-  recursionNodeStack[0].start_node = NULL;
-  
 }
 
 /***********************************************************************/
@@ -494,7 +483,7 @@ IntervalTree::~IntervalTree() {
   }
   delete nil;
   delete root;
-  free(recursionNodeStack);
+  //free(recursionNodeStack);
 }
 
 
@@ -740,14 +729,25 @@ int IntervalTree::Enumerate(int64_t low, int64_t high, std::queue<void *> *resul
   IntervalTreeNode* x=root->left;
   int stuffToDo = (x != nil);
   int count = 0;
-  
+
   // Possible speed up: add min field to prune right searches //
+
+
+  /* the following are used for the Enumerate function */
+  unsigned int recursionNodeStackSize = 128;
+  it_recursion_node *recursionNodeStack = (it_recursion_node *)
+    calloc(recursionNodeStackSize, sizeof(it_recursion_node));
+
+  assert(recursionNodeStack);
+
+  unsigned int recursionNodeStackTop = 1;
+  recursionNodeStack[0].start_node = NULL;
 
 #ifdef DEBUG_ASSERT
   Assert((recursionNodeStackTop == 1),
 	 "recursionStack not empty when entering IntervalTree::Enumerate");
 #endif
-  currentParent = 0;
+  unsigned int currentParent = 0;
 
   while(stuffToDo) {
     if (Overlap(low,high,x->key,x->high) ) {

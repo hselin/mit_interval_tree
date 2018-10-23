@@ -111,10 +111,12 @@ protected:
   void CheckMaxHighFields(IntervalTreeNode *) const;
   int CheckMaxHighFieldsHelper(IntervalTreeNode * y, const int64_t currentHigh, int match) const;
 private:
+  /*
   unsigned int recursionNodeStackSize;
   it_recursion_node * recursionNodeStack;
   unsigned int currentParent;
   unsigned int recursionNodeStackTop;
+  */
 };
 
 
