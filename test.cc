@@ -105,13 +105,21 @@ int main(int argc, char ** argv)
   printf("LLONG_MAX: %lld\n", LLONG_MAX);
   */
 
-  addInterval(tree, 0, 4607);
-  addInterval(tree, 4608, 7047);
+  addInterval(tree, 0, 0);
+  addInterval(tree, 1, 1);
+  addInterval(tree, 2, 2);
+  addInterval(tree, 3, 3);
+  addInterval(tree, 4, 4);
+  addInterval(tree, 5, 5);
+  addInterval(tree, 6, 6);
+  addInterval(tree, 7, 7);
+  addInterval(tree, 8, 8);
+  addInterval(tree, 9, 9);
   
-  std::queue<Interval *> qr;
-  int count = queryInterval(tree, 0, 7047, (std::queue<void *> *)&qr);
-  assert(count == qr.size());
-  printIntervals(&qr);
+  //std::queue<Interval *> qr;
+  //int count = queryInterval(tree, 0, 7047, (std::queue<void *> *)&qr);
+  //assert(count == qr.size());
+  //printIntervals(&qr);
 
   tree->Print();
 
